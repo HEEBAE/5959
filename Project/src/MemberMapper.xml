@@ -128,9 +128,10 @@ from game
 </select>
 <insert id="insertuserlist" parameterType="string">
 insert into userlist
-{id}
+(id)
 values
-#{id}
+(#{id})
+
 </insert>
 <delete id="deleteuserlist"  parameterType="string">
 delete userlist
