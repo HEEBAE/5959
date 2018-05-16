@@ -19,13 +19,14 @@ public class Board extends JFrame implements ItemListener {
 	public static JLabel question;
 	JCheckBox chckbxBGM;
 	public static JLabel timer;
+	public static WaitingUI wi;
 
 	SoundThread r = new SoundThread();
 	Thread t1 = new Thread(r);
 
-	 static ChatClientThread thread = new ChatClientThread("127.0.0.1", 3333); //
-	// ip, 포트번호 주고 객체 생성
-	//static ChatClientThread thread = new ChatClientThread("203.233.196.143", 3333); // ip, 포트번호 주고 객체 생성
+	static ChatClientThread thread = new ChatClientThread("127.0.0.1", 3333); // ip, 포트번호 주고 객체 생성
+	// static ChatClientThread thread = new ChatClientThread("203.233.196.143",
+	// 3333); // ip, 포트번호 주고 객체 생성
 	public static JButton send;
 
 	public static Color getpenColor() {
@@ -49,6 +50,10 @@ public class Board extends JFrame implements ItemListener {
 	}
 
 	public Board(MemberVO vo) {
+		if (MultiChatServer.ChatServerThread.countuserlist() < 3) {
+			wi = new WaitingUI();
+		}
+
 		getContentPane().setFont(new Font("나눔고딕코딩", Font.PLAIN, 13));
 		setFont(new Font("나눔고딕코딩", Font.PLAIN, 15));
 		t1.start();
@@ -179,6 +184,7 @@ public class Board extends JFrame implements ItemListener {
 
 		listener = new CanvasMouseListener();
 		canvas = new Canvas();
+		canvas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		canvas.setBackground(Color.white);
 		canvas.setBounds(1, 1, 648, 383);
 		canvas_panel.add(canvas);

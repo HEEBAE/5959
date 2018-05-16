@@ -152,14 +152,10 @@ public class ReadyUI extends JFrame implements ActionListener {
 			 * "이미접속되어 있는 계정입니다.", null, JOptionPane.INFORMATION_MESSAGE); }
 			 */
 			board.getThread().setUsername(vo.getId());
-			System.out.println("현재 접속중인 인원 수" + MultiChatServer.ChatServerThread.countuserlist());
-			if (MultiChatServer.ChatServerThread.countuserlist() < 3) {
-				new WaitingUI();
-				this.dispose();
-			} else {
-				new Board(vo);
-				this.dispose();
-			}
+
+			new Board(vo);
+			this.dispose();
+
 			break;
 		}
 	}

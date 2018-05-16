@@ -107,6 +107,11 @@ public class ChatServerThread implements Runnable {
 					data.setUsernames(usernames);
 
 					broadCasting(data);
+					
+					broadCasting(new Data(Data.NEW_PERSON, null, "현재 접속중인 인원은 " + countuserlist() + "명입니다"));
+					
+					if(countuserlist() >=3)
+						broadCasting(new Data(Data.GAME_START, null, null));
 
 					for (int i = 0; i < wordList.size(); i++)
 						output.writeObject(new Data(Data.WORD, null, wordList.get(i)));

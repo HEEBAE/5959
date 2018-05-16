@@ -255,6 +255,12 @@ public class ChatClientThread implements Runnable {
 					WaitingUI.timer.setText(data.getMessage());
 					//setText(data.getMessage());
 					break;
+				case Data.NEW_PERSON:
+					WaitingUI.usercount.setText(data.getMessage());
+					break;
+				case Data.GAME_START:
+					Board.wi.dispose();
+					break;
 				}
 
 			} catch (Exception e) {
