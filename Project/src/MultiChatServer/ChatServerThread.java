@@ -100,17 +100,18 @@ public class ChatServerThread implements Runnable {
 					message = name + "님이 접속했습니다.";
 					usernames.add(name);
 					userports.add(socket.getPort());
-					
-					insertuserlist(name);
-					
+					if (name.equals(null) || name.equals("")) {
+					} else {
+						insertuserlist(name);
+					}
 					data.setMessage(message);
 					data.setUsernames(usernames);
 
 					broadCasting(data);
-					
+
 					broadCasting(new Data(Data.NEW_PERSON, null, "현재 접속중인 인원은 " + countuserlist() + "명입니다"));
-					
-					if(countuserlist() >=3)
+
+					if (countuserlist() >= 3)
 						broadCasting(new Data(Data.GAME_START, null, null));
 
 					for (int i = 0; i < wordList.size(); i++)
@@ -120,12 +121,11 @@ public class ChatServerThread implements Runnable {
 
 					System.out.println(countuserlist());
 					System.out.println(signal);
-					if(countuserlist() < 3 && !signal) {
+					if (countuserlist() < 3 && !signal) {
 						new TimerThread2();
 						signal = true;
 						System.out.println("현재 접속중인 인원은 " + countuserlist() + "명입니다.");
-					}
-					else {
+					} else {
 						if (count == -1) {
 							count++;
 							tragger = userports.get(count);
@@ -134,19 +134,14 @@ public class ChatServerThread implements Runnable {
 							beforetragger = tragger;
 							count++;
 						}
-						GameVO vocheck = new GameVO();
-						vocheck.setId(name);
-						vocheck.setGame_seq(String.valueOf(ChatServer.gameseq));
-						if (bringGame(vocheck).size() == 0) {
-							insertGame(ChatServer.gameseq, name, wordList.get(ChatServer.counter));
-						}
+
 					}
 					if (picture_record.size() != 0) {
 						for (int i = 0; i < picture_record.size(); i++) {
 							output.writeObject(new Data(Data.REDRAW, null, picture_record.get(i)));
 							Thread.sleep(1);
 						}
-					}					
+					}
 					break;
 
 				case Data.CHAT_MESSAGE: // 채팅 내용 전송
@@ -161,8 +156,8 @@ public class ChatServerThread implements Runnable {
 							if (count >= chatList.size())
 								count %= chatList.size();
 							tragger = userports.get(count);
-							broadCasting(new Data(Data.ANSWER, data.getName(), ChatServer.counter + "#"
-									+ tragger + "#" + beforetragger + "#" + count));
+							broadCasting(new Data(Data.ANSWER, data.getName(),
+									ChatServer.counter + "#" + tragger + "#" + beforetragger + "#" + count));
 							flag = true;
 							beforetragger = tragger;
 							picture_record.clear();
@@ -188,9 +183,10 @@ public class ChatServerThread implements Runnable {
 
 									if (usernames.get(i).equals(data.getName())) {
 										usertype = "correct";
-									} else if (usernames.get(i).equals(usernames.get(q))) {
-										usertype = "question";
-									}
+									} /*
+										 * else if (usernames.get(i).equals(usernames.get(q))) { usertype = "question";
+										 * }
+										 */
 
 									updateGame(bringGame(vo).get(0), usertype);
 									System.out.println(bringGame(vo).get(0));
@@ -218,9 +214,10 @@ public class ChatServerThread implements Runnable {
 						}
 					}
 					chatList.remove(socket.getPort());
-					
-					deleteuserlist(data.getName());
-					
+					if (data.getName().equals(null) || data.getName().equals("")) {
+					} else {
+						deleteuserlist(data.getName());
+					}
 					input.close();
 					output.close();
 					socket.close();
@@ -301,6 +298,14 @@ public class ChatServerThread implements Runnable {
 				case Data.TIMER:
 					broadCasting(data);
 					break;
+				case Data.GAME_START:
+					GameVO vocheck = new GameVO();
+					vocheck.setId(name);
+					vocheck.setGame_seq(String.valueOf(ChatServer.gameseq));
+					if (bringGame(vocheck).size() == 0) {
+						insertGame(ChatServer.gameseq, name, wordList.get(ChatServer.counter));
+					}
+					break;
 				}
 			} catch (Exception e) {
 				return;
@@ -312,10 +317,9 @@ public class ChatServerThread implements Runnable {
 	public void broadCasting(Data data) {
 		for (HashMap.Entry<Integer, ChatServerThread> thread : chatList.entrySet()) {
 			try {
-				thread.getValue().output.writeObject(data);
-
+				thread.getValue().output.writeUnshared(data);
 				thread.getValue().output.reset();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -416,14 +420,16 @@ public class ChatServerThread implements Runnable {
 		int result = dao.bringGameSeq();
 		return result;
 	}
+
 	public void insertuserlist(String id) {
 		dao.insertuserlist(id);
 		System.out.println(id);
 	}
-	
+
 	public void deleteuserlist(String id) {
 		dao.deleteuserlist(id);
 	}
+
 	public static int countuserlist() {
 		int count = 0;
 		count = dao.countuserlist();

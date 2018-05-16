@@ -26,7 +26,7 @@ public class ChatServer {
 	
 	
 	public static void main(String[] args) {
-		gameseq = ChatServerThread.bringGameSeq();/////////////////////////////////////////
+		gameseq = ChatServerThread.bringGameSeq();
 		gameseq++;
 		question = bringWord();
 		Collections.shuffle(question);

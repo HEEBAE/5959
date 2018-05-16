@@ -12,6 +12,8 @@ from userlist
 select *
 from userlist
 
+drop table userlist
+
 --------------------------------------------------------
 create table userlist
 (
@@ -292,6 +294,7 @@ drop table member;
 drop table game;
 drop table wordlist;
 drop table filtering;
+drop table userlist;
 drop sequence memberseq;
 drop sequence wordseq;
 drop sequence filterseq;
