@@ -95,26 +95,26 @@ public class ReadyUI extends JFrame implements ActionListener {
 		try {
 			idLabel.setText(vo.getId());
 
-			winningrateLabel.setText(vo.getWinningRate()+"%");
+			winningrateLabel.setText(vo.getWinningRate() + "%");
 			long pt = Long.parseLong(vo.getTotalplaytime());
-			int pts = (int) (pt%60);
-			int ptm = (int) (pt%3600);
-			int pth= (int) (pt/3600);
-			playtimeLabel.setText(pth+"h "+ptm+"m "+pts+"s");
-			
-			
-			if(Integer.parseInt(vo.getPlaynum())<20) //20판미만
-			{}
-			else if(Float.parseFloat(vo.getWinningRate())>=80)//다이아
-			{}
-			else if(Float.parseFloat(vo.getWinningRate())>=60)//플래
-			{}
-			else if(Float.parseFloat(vo.getWinningRate())>=40)//골드
-			{}
-			else if(Float.parseFloat(vo.getWinningRate())>=20)//실버
-			{}
-			else //브론즈
-			{}
+			int pts = (int) (pt % 60);
+			int ptm = (int) (pt % 3600);
+			int pth = (int) (pt / 3600);
+			playtimeLabel.setText(pth + "h " + ptm + "m " + pts + "s");
+
+			if (Integer.parseInt(vo.getPlaynum()) < 20) // 20판미만
+			{
+			} else if (Float.parseFloat(vo.getWinningRate()) >= 80)// 다이아
+			{
+			} else if (Float.parseFloat(vo.getWinningRate()) >= 60)// 플래
+			{
+			} else if (Float.parseFloat(vo.getWinningRate()) >= 40)// 골드
+			{
+			} else if (Float.parseFloat(vo.getWinningRate()) >= 20)// 실버
+			{
+			} else // 브론즈
+			{
+			}
 
 			JLabel grade_img = new JLabel("");
 			grade_img.setIcon(new ImageIcon("grade_default.png"));
@@ -142,23 +142,24 @@ public class ReadyUI extends JFrame implements ActionListener {
 			ChangePasswordUI cp = new ChangePasswordUI(vo);
 			break;
 		case "게임시작":////////////////////////////////////////////////////////
-			boolean flag =true;
+			boolean flag = true;
 			Board.thread.getUserList();
-			/*for(int i=0;i<ChatClientThread.usernames.size();i++) {
-			if(vo.getId().equals(ChatClientThread.usernames.get(i))){
-				flag=false;
-			}
-			}
-			if(flag) {
+			/*
+			 * for(int i=0;i<ChatClientThread.usernames.size();i++) {
+			 * if(vo.getId().equals(ChatClientThread.usernames.get(i))){ flag=false; } }
+			 * if(flag) { board.getThread().setUsername(vo.getId()); new Board(vo);
+			 * this.dispose(); }else { JOptionPane.showMessageDialog(null,
+			 * "이미접속되어 있는 계정입니다.", null, JOptionPane.INFORMATION_MESSAGE); }
+			 */
 			board.getThread().setUsername(vo.getId());
-			new Board(vo);
-			this.dispose();
-			}else {
-				JOptionPane.showMessageDialog(null, "이미접속되어 있는 계정입니다.", null, JOptionPane.INFORMATION_MESSAGE);
-			}*/
-			board.getThread().setUsername(vo.getId());
-			new Board(vo);
-			this.dispose();
+			System.out.println("현재 접속중인 인원 수" + MultiChatServer.ChatServerThread.countuserlist());
+			if (MultiChatServer.ChatServerThread.countuserlist() < 3) {
+				new WaitingUI();
+				this.dispose();
+			} else {
+				new Board(vo);
+				this.dispose();
+			}
 			break;
 		}
 	}

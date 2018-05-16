@@ -1,19 +1,12 @@
 package MultiChatClient;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.awt.*;
+import java.io.*;
 import java.net.Socket;
 import java.util.*;
 import javax.swing.*;
 import VO.*;
-import Board.Board;
-import Board.CanvasMouseListener;
+import Board.*;
 import MultiChatServer.*;
 
 public class ChatClientThread implements Runnable {
@@ -34,9 +27,9 @@ public class ChatClientThread implements Runnable {
 
 	String username; // 접속자이름
 	JList<String> userList; // 접속자이름명단
-	
+
 	public static ArrayList<String> usernames;
-	
+
 	public JScrollPane getScroll2() {
 		return scroll2;
 	}
@@ -116,7 +109,6 @@ public class ChatClientThread implements Runnable {
 			new Thread(this).start();
 			Data data = new Data(Data.FIRST_CONNECTION, username);
 			output.writeObject(data);
-			
 
 		} catch (IOException e) {
 			output("<<서버 접속 실패>>");
@@ -258,6 +250,10 @@ public class ChatClientThread implements Runnable {
 						else
 							CanvasMouseListener.erasedraw(startX, startY, lastX, lastY, new Color(r, g, b));
 					}
+					break;
+				case Data.TIMER2:
+					WaitingUI.timer.setText(data.getMessage());
+					//setText(data.getMessage());
 					break;
 				}
 

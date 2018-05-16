@@ -39,6 +39,7 @@ public class ChatServerThread implements Runnable {
 	FileWriter fw;
 	BufferedWriter bw;
 	public static boolean flag = false;
+	boolean signal = false;
 
 	public ChatServerThread(Socket socket) {
 		File file = new File("wordList");
@@ -51,7 +52,6 @@ public class ChatServerThread implements Runnable {
 			String str;
 			while ((str = br.readLine()) != null) {
 				wordList.add(str);
-				// output.writeObject(new Data(Data.WORD, null, str));
 			}
 		} catch (Exception e) {
 		}
@@ -63,7 +63,6 @@ public class ChatServerThread implements Runnable {
 			String str;
 			while ((str = br.readLine()) != null) {
 				filterList.add(str);
-				// output.writeObject(new Data(Data.FILTER, null, str));
 			}
 			br.close();
 		} catch (Exception e) {
@@ -79,7 +78,6 @@ public class ChatServerThread implements Runnable {
 			System.out.println(addr + "과의 연결 실패.");
 		}
 		chatList.put(socket.getPort(), this);
-		//insertuserlist(this.username);
 	}
 
 	// 클라이언트로부터의 전송을 기다림.
@@ -115,7 +113,14 @@ public class ChatServerThread implements Runnable {
 					for (int i = 0; i < filterList.size(); i++)
 						output.writeObject(new Data(Data.FILTER, null, filterList.get(i)));
 
-					if (chatList.size() >= 3) {
+					System.out.println(countuserlist());
+					System.out.println(signal);
+					if(countuserlist() < 3 && !signal) {
+						new TimerThread2();
+						signal = true;
+						System.out.println("현재 접속중인 인원은 " + countuserlist() + "명입니다.");
+					}
+					else {
 						if (count == -1) {
 							count++;
 							tragger = userports.get(count);
@@ -136,8 +141,7 @@ public class ChatServerThread implements Runnable {
 							output.writeObject(new Data(Data.REDRAW, null, picture_record.get(i)));
 							Thread.sleep(1);
 						}
-					}
-					
+					}					
 					break;
 
 				case Data.CHAT_MESSAGE: // 채팅 내용 전송
@@ -415,7 +419,7 @@ public class ChatServerThread implements Runnable {
 	public void deleteuserlist(String id) {
 		dao.deleteuserlist(id);
 	}
-	public int countuserlist() {
+	public static int countuserlist() {
 		int count = 0;
 		count = dao.countuserlist();
 		return count;

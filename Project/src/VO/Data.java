@@ -20,6 +20,7 @@ public class Data implements Serializable  {
     public static final int WORD = 11;
     public static final int FILTER = 12;
     public static final int REDRAW = 13;
+    public static final int TIMER2 = 14;
 	
 	int state;						//전송되는 데이터 종류
 	String name;					//대화내용 입력한 사용자 이름

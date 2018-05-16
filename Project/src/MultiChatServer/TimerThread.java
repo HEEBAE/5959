@@ -30,7 +30,7 @@ public class TimerThread {
 				if (ChatServerThread.flag == true) {
 					service.shutdownNow();
 					ChatServerThread.flag = false;
-					count = 180;
+					count = 120;
 				} else if (count <= 0) {
 					service.shutdownNow();
 					timeout = true;

@@ -1,10 +1,5 @@
-/Board/
-/DAO/
 /Main/
-/Member.sql
-/MemberMapper.xml
-/MultiChatClient/
 /MultiChatServer/
 /VO/
-/db.properties
-/mybatis-config.xml
+/MultiChatClient/
+/Board/
